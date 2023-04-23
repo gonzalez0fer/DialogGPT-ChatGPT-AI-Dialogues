@@ -20,8 +20,8 @@ class ChatInterface:
         self.action_queue = Queue()
         self.speech_thread_active = True
         self.shutdown_event = Event()
-        speech_thread = Thread(target=self._process_actions)
-        speech_thread.start()
+        self.speech_thread = Thread(target=self._process_actions)
+        self.speech_thread.start()
 
         # Crear dos marcos para las imágenes de los interlocutores
         self.face1_frame = tk.Frame(self.root)
@@ -58,7 +58,17 @@ class ChatInterface:
     def on_close(self):
         # Detener el hilo que procesa las acciones y cerrar la ventana principal
         self.speech_thread_active = False
-        self.root.destroy()
+        self.shutdown_event.set()
+
+        # Verificar si el hilo de ejecución se ha detenido antes de cerrar la ventana
+        self.root.after(100, self.check_speech_thread)
+
+    def check_speech_thread(self):
+        if self.speech_thread.is_alive():
+            self.root.after(100, self.check_speech_thread)
+        else:
+            self.root.quit()
+        
 
     # Método para enviar el siguiente mensaje de la conversación
     def send_dialogue(self, is_you, dialogue_a, dialogue_b):
@@ -121,31 +131,11 @@ if __name__ == '__main__':
     dialogue_a = [
     "Have you read any Harry Potter books?",
     "Which one is your favorite?",
-    "Who is your favorite character?",
-    "What do you think of the movies?",
-    "Do you prefer the books or the movies?",
-    "Have you been to The Wizarding World of Harry Potter?",
-    "Which Hogwarts house do you belong to?",
-    "What do you think of J.K. Rowling's writing style?",
-    "What magical creature would you want as a pet?",
-    "If you could attend Hogwarts, which class would you be most excited to take?",
-    "Do you have a favorite spell or potion?",
-    "What do you think of the fan theories about the Harry Potter universe?"
     ]
 
     dialogue_b = [
     "Yes, I have read all of them.",
     "It's hard to choose, but probably the third one.",
-    "Definitely Hermione.",
-    "I think they did a good job overall, but the books are better.",
-    "The books, without a doubt.",
-    "No, but it's on my bucket list.",
-    "Ravenclaw, for sure.",
-    "I think she's a great storyteller.",
-    "A phoenix would be amazing!",
-    "Charms or Defense Against the Dark Arts.",
-    "I love the Patronus Charm.",
-    "Some of them are really interesting, but others are a bit far-fetched."
     ]
 
     # Crear la ventana principal de tkinter
