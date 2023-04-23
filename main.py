@@ -31,8 +31,8 @@ class ChatInterface:
         self.face2_frame.grid(row=0, column=1, padx=10, pady=10)
 
         # Cargar las imágenes de los interlocutores
-        self.face1 = ImageTk.PhotoImage(Image.open("face1.png"))
-        self.face2 = ImageTk.PhotoImage(Image.open("face2.png"))
+        self.face1 = ImageTk.PhotoImage(Image.open("assets/face1.png"))
+        self.face2 = ImageTk.PhotoImage(Image.open("assets/face2.png"))
 
         # Crear etiquetas para las imágenes de los interlocutores
         self.face1_label = tk.Label(self.face1_frame, image=self.face1)
