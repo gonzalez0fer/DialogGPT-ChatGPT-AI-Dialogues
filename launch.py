@@ -7,6 +7,8 @@ import pyttsx3
 from dotenv import load_dotenv
 from test_dialogues import *
 #from openai_prompt import *
+import threading
+
 
 class ImageLabel(tk.Label):
     """
@@ -45,11 +47,13 @@ class ImageLabel(tk.Label):
             self.config(image=next(self.frames))
             self.after(self.delay, self.next_frame)
 
+
+
 class ChatInterface:
     
     def __init__(self, root, dialogue_a, dialogue_b):
         self.root = root
-        self.root.configure(bg="black")
+        self.root.configure(bg="#101010")
         self.root.title("Chat Interface")
         self.engine = pyttsx3.init()
         self.voices = self.engine.getProperty('voices')
@@ -59,12 +63,12 @@ class ChatInterface:
         self.face2_frame = tk.Frame(self.root)
         self.face2_frame.grid(row=0, column=2, padx=10, pady=10)
 
-        self.face1 = ImageTk.PhotoImage(Image.open("assets/face1.png").resize((250, 250), Image.ANTIALIAS))
-        self.face2 = ImageTk.PhotoImage(Image.open("assets/face2.png").resize((250, 250), Image.ANTIALIAS))
-
-        self.face1_label = tk.Label(self.face1_frame, image=self.face1)
+        self.face1_label = ImageLabel(self.face1_frame)
+        self.face1_label.load("assets/talk.gif")
         self.face1_label.grid(row=1, column=0, sticky="w")
-        self.face2_label = tk.Label(self.face2_frame, image=self.face2)
+
+        self.face2_label = ImageLabel(self.face2_frame)
+        self.face2_label.load("assets/talk2.gif")
         self.face2_label.grid(row=1, column=1, sticky="e")
 
         self.dialogue_label = tk.Text(self.root, height=20, width=50, bg="white", wrap="word", relief="flat")
@@ -80,7 +84,9 @@ class ChatInterface:
 
         self.root.after(100, lambda: self.send_dialogue(True, dialogue_a, dialogue_b))
 
-
+    def animate_gif(self, label, gif_path):
+        label.load(gif_path)
+        
     def on_close(self):
         self.root.quit()
 
