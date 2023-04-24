@@ -1,13 +1,11 @@
 import os
-import openai
 import tkinter as tk
 from PIL import Image, ImageTk
 from itertools import count, cycle
 import pyttsx3
 from dotenv import load_dotenv
-from test_dialogues import *
+from data import test_dialogues
 #from openai_prompt import *
-import threading
 
 
 class ImageLabel(tk.Label):
@@ -127,12 +125,12 @@ if __name__ == '__main__':
 
     if os.getenv("TYPE_OF_INPUT") == "TEST":
         if os.getenv("LANGUAGE") == "EN":
-            dialogue_a = dialogue_a_EN
-            dialogue_b = dialogue_b_EN
+            dialogue_a = test_dialogues.dialogue_a_EN
+            dialogue_b = test_dialogues.dialogue_b_EN
             language_voices = [0, 1]
         else:
-            dialogue_a = dialogue_a_ES
-            dialogue_b = dialogue_b_ES
+            dialogue_a = test_dialogues.dialogue_a_ES
+            dialogue_b = test_dialogues.dialogue_b_ES
             language_voices = [3, 2]
 
     else:
