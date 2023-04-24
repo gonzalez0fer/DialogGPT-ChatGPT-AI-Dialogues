@@ -1,13 +1,55 @@
 import os
+import openai
 import tkinter as tk
 from PIL import Image, ImageTk
+from itertools import count, cycle
 import pyttsx3
 from dotenv import load_dotenv
-from dialogues import *
+from test_dialogues import *
+#from openai_prompt import *
+
+class ImageLabel(tk.Label):
+    """
+    A Label that displays images, and plays them if they are gifs
+    :im: A PIL Image instance or a string filename
+    """
+    def load(self, im):
+        if isinstance(im, str):
+            im = Image.open(im)
+        frames = []
+ 
+        try:
+            for i in count(1):
+                frames.append(ImageTk.PhotoImage(im.copy()))
+                im.seek(i)
+        except EOFError:
+            pass
+        self.frames = cycle(frames)
+ 
+        try:
+            self.delay = im.info['duration']
+        except:
+            self.delay = 100
+ 
+        if len(frames) == 1:
+            self.config(image=next(self.frames))
+        else:
+            self.next_frame()
+ 
+    def unload(self):
+        self.config(image=None)
+        self.frames = None
+ 
+    def next_frame(self):
+        if self.frames:
+            self.config(image=next(self.frames))
+            self.after(self.delay, self.next_frame)
 
 class ChatInterface:
+    
     def __init__(self, root, dialogue_a, dialogue_b):
         self.root = root
+        self.root.configure(bg="black")
         self.root.title("Chat Interface")
         self.engine = pyttsx3.init()
         self.voices = self.engine.getProperty('voices')
@@ -15,10 +57,10 @@ class ChatInterface:
         self.face1_frame = tk.Frame(self.root)
         self.face1_frame.grid(row=0, column=0, padx=10, pady=10)
         self.face2_frame = tk.Frame(self.root)
-        self.face2_frame.grid(row=0, column=1, padx=10, pady=10)
+        self.face2_frame.grid(row=0, column=2, padx=10, pady=10)
 
-        self.face1 = ImageTk.PhotoImage(Image.open("assets/face1.png"))
-        self.face2 = ImageTk.PhotoImage(Image.open("assets/face2.png"))
+        self.face1 = ImageTk.PhotoImage(Image.open("assets/face1.png").resize((250, 250), Image.ANTIALIAS))
+        self.face2 = ImageTk.PhotoImage(Image.open("assets/face2.png").resize((250, 250), Image.ANTIALIAS))
 
         self.face1_label = tk.Label(self.face1_frame, image=self.face1)
         self.face1_label.grid(row=1, column=0, sticky="w")
@@ -27,13 +69,17 @@ class ChatInterface:
 
         self.dialogue_label = tk.Text(self.root, height=20, width=50, bg="white", wrap="word", relief="flat")
         self.dialogue_label.config(font=("Arial", 10), state="disabled")
-        self.dialogue_label.grid(row=0, column=0, columnspan=2, padx=10, pady=10)
+        self.dialogue_label.grid(row=0, column=1, padx=10, pady=10)
+        self.dialogue_label.configure(bg="#333")
+        self.dialogue_label.configure(font=("Arial", 12), fg="white")
 
         self.root.columnconfigure(0, weight=1)
         self.root.columnconfigure(1, weight=1)
+        self.root.columnconfigure(2, weight=1)
         self.root.rowconfigure(0, weight=1)
 
         self.root.after(100, lambda: self.send_dialogue(True, dialogue_a, dialogue_b))
+
 
     def on_close(self):
         self.root.quit()
@@ -81,9 +127,16 @@ if __name__ == '__main__':
         else:
             dialogue_a = dialogue_a_ES
             dialogue_b = dialogue_b_ES
-            language_voices = [2, 3]
+            language_voices = [3, 2]
 
     else:
+        if os.getenv("LANGUAGE") == "EN":
+            language_voices = [0, 1]
+            pass
+        else:
+            language_voices = [3, 2]
+            pass
+        
         pass
 
 
