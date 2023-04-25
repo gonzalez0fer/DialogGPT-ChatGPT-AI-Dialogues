@@ -5,7 +5,7 @@ from itertools import count, cycle
 import pyttsx3
 from dotenv import load_dotenv
 from data import test_dialogues
-#from openai_prompt import *
+from openai_api import openai_request
 
 
 class ImageLabel(tk.Label):
@@ -135,14 +135,18 @@ if __name__ == '__main__':
 
     else:
         if os.getenv("LANGUAGE") == "EN":
+            print("requesting dialogue to openai.")
+            dialogues = openai_request("EN")
+            dialogue_a = dialogues['sender']
+            dialogue_b = dialogues['receiver']
             language_voices = [0, 1]
-            pass
         else:
+            print("requesting dialogue to openai.")
+            dialogues = openai_request("ES")
+            dialogue_a = dialogues['sender']
+            dialogue_b = dialogues['receiver']
             language_voices = [3, 2]
-            pass
-        
-        pass
-
+            
 
     root = tk.Tk()
     chat_interface = ChatInterface(root, dialogue_a, dialogue_b)
