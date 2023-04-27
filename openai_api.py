@@ -15,8 +15,8 @@ def openai_request(language):
     def delete_line_break(lista):
         for i in range(len(lista)):
             lista[i] = lista[i].replace('\n', '')
-            lista[i] = lista[i].replace('Johana:', '')
-            lista[i] = lista[i].replace('Katherine:', '')
+            lista[i] = lista[i].replace('Kyle:', '')
+            lista[i] = lista[i].replace('Cartman:', '')
         return lista
 
     # Define a function to make requests to the OpenAI API with retries
@@ -29,7 +29,7 @@ def openai_request(language):
                 completion = openai.Completion.create(
                     engine="text-davinci-003",
                     prompt = user_prompt,
-                    max_tokens=512
+                    max_tokens=256
                 )
                 # If the request is successful, return the model's response
                 return completion.choices[0].text
@@ -41,13 +41,13 @@ def openai_request(language):
         return None
     
     if language == "ES":
-        prompt_receiver = description_ES_b + sitution_ES_b # Initial prompt for the receiver in Spanish
-        prompt_sender = description_ES_a + sitution_ES_a # Initial prompt for the sender in Spanish
-        sender_list = ['Hola, como estas?'] # Initial response from the sender in Spanish
+        prompt_receiver = description_ES_b + situation_ES_b # Initial prompt for the receiver in Spanish
+        prompt_sender = description_ES_a + situation_ES_a # Initial prompt for the sender in Spanish
+        sender_list = ['Hola chico Slytherin, como estas?'] # Initial response from the sender in Spanish
     else:
-        prompt_receiver = description_EN_b + sitution_EN_b # Initial prompt for the receiver in English
-        prompt_sender = description_EN_a + sitution_EN_a # Initial prompt for the sender in English
-        sender_list = ['Hello, how are you?'] # Initial response from the sender in English
+        prompt_receiver = description_EN_b + situation_EN_b # Initial prompt for the receiver in English
+        prompt_sender = description_EN_a + situation_EN_a # Initial prompt for the sender in English
+        sender_list = ['Hello Slytherin boy, how are you?'] # Initial response from the sender in English
 
     itera = 0 # Initialize the variables needed for the conversation
     openai_iterations = int(os.getenv("OPENAI_NUMBER_ITERATIONS"))
@@ -58,16 +58,16 @@ def openai_request(language):
         response_receiver = openai_connection(prompt_receiver)
         #print(response_receiver)
         # Add the receiver's response to the sender's prompt
-        prompt_sender = prompt_sender + ('\nJohana: '+response_receiver+'\n')
-        prompt_receiver = prompt_receiver + ('\nJohana: '+ response_receiver + '\n')
+        prompt_sender = prompt_sender + ('\nKyle: '+response_receiver+'\n')
+        prompt_receiver = prompt_receiver + ('\nKyle: '+ response_receiver + '\n')
         # Add the receiver's response to the list of receiver's responses
         receiver_list.append(response_receiver)
 
         # Generate the sender's response based on the receiver's response
         reponse_sender = openai_connection(response_receiver)
         #print(reponse_sender)
-        prompt_receiver = prompt_receiver + ('\nKatherine: '+ reponse_sender + '\n')
-        prompt_sender = prompt_sender + ('\nKatherine: '+ reponse_sender + '\n')
+        prompt_receiver = prompt_receiver + ('\nCartman: '+ reponse_sender + '\n')
+        prompt_sender = prompt_sender + ('\nCartman: '+ reponse_sender + '\n')
         # Add the sender's response to the list of sender's responses
         sender_list.append(reponse_sender)
         itera += 1
