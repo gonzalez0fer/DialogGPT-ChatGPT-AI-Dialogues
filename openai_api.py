@@ -40,20 +40,23 @@ def openai_request(language):
          # If the maximum number of retries is reached and the request still fails, return None
         return None
     
-    
+    if language == "ES":
+        prompt_receiver = description_ES_b + sitution_ES_b # Initial prompt for the receiver in Spanish
+        prompt_sender = description_ES_a + sitution_ES_a # Initial prompt for the sender in Spanish
+        sender_list = ['Hola, como estas?'] # Initial response from the sender in Spanish
+    else:
+        prompt_receiver = description_EN_b + sitution_EN_b # Initial prompt for the receiver in English
+        prompt_sender = description_EN_a + sitution_EN_a # Initial prompt for the sender in English
+        sender_list = ['Hello, how are you?'] # Initial response from the sender in English
+
     itera = 0 # Initialize the variables needed for the conversation
     openai_iterations = int(os.getenv("OPENAI_NUMBER_ITERATIONS"))
-    prompt_receiver = description_ES_b + sitution_ES_b # Initial prompt for the receiver in Spanish
-    prompt_sender = description_ES_a + sitution_ES_a # Initial prompt for the sender in Spanish
-
     receiver_list = []
-    sender_list = ['Hola, como estas?'] # Initial response from the sender in Spanish
-
     # Carry out the conversation using requests to the OpenAI API
     while itera < openai_iterations:
         # Generate the receiver's response
         response_receiver = openai_connection(prompt_receiver)
-        print(response_receiver)
+        #print(response_receiver)
         # Add the receiver's response to the sender's prompt
         prompt_sender = prompt_sender + ('\nJohana: '+response_receiver+'\n')
         prompt_receiver = prompt_receiver + ('\nJohana: '+ response_receiver + '\n')
@@ -62,7 +65,7 @@ def openai_request(language):
 
         # Generate the sender's response based on the receiver's response
         reponse_sender = openai_connection(response_receiver)
-        print(reponse_sender)
+        #print(reponse_sender)
         prompt_receiver = prompt_receiver + ('\nKatherine: '+ reponse_sender + '\n')
         prompt_sender = prompt_sender + ('\nKatherine: '+ reponse_sender + '\n')
         # Add the sender's response to the list of sender's responses
@@ -70,6 +73,3 @@ def openai_request(language):
         itera += 1
     # Return a dictionary with the sender's and receiver's response lists without line breaks
     return {'sender':delete_line_break(sender_list), 'receiver':delete_line_break(receiver_list)}
-
-print('##############################')
-print(openai_request())
