@@ -1,6 +1,18 @@
 # DialogGPT: ChatGPT AI Dialogues
 
-This code implements a simple chat interface using Python and the tkinter library. The program loads a conversation between two people, displays the conversation on the GUI, and speaks the messages out loud using text-to-speech.
+<div style="text-align:center">
+  <img src="assets/UI.png" height="300" />
+</div>
+
+
+
+This Python program uses the tkinter library to create a chat interface between two people. The program loads a pre-written conversation between two characters and displays it in a GUI. Additionally, it utilizes text-to-speech technology to speak the messages out loud as they are displayed.
+
+The GUI includes a text box where users can type their responses, and a button to submit the response to the conversation. The program then generates a response based on the user's input using the OpenAI API, and adds it to the conversation.
+
+The conversation between the two characters is pre-written in a separate file, and the program loads it when it is run. The user can continue the conversation as long as they like, with the program generating new responses based on the conversation history.
+
+Overall, this program provides an interactive and engaging chat experience using Python and the OpenAI API.
 
 ## Requirements
 
