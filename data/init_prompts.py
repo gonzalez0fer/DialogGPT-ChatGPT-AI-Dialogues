@@ -37,7 +37,6 @@ Cartman: Hola, ¿cómo estás?
 """
 
 
-
 description_EN_a = """
 You are a guy named Cartman.
 You love the magical world of Harry Potter and meeting new people to talk about it.
